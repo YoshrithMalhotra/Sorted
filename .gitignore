@@ -1,0 +1,116 @@
+# ---------------------------------------------------------------------------
+# Secrets and environment
+# Never commit keys. Commit a `.env.example` with empty values instead.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.jks
+*.keystore
+!debug.keystore
+service-account*.json
+# Firebase / Google config files: keep them out of git and add them in CI
+google-services.json
+GoogleService-Info.plist
+
+# ---------------------------------------------------------------------------
+# OS and editors
+# ---------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+*.swp
+*~
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.fleet/
+
+# ---------------------------------------------------------------------------
+# Logs and temp files
+# ---------------------------------------------------------------------------
+*.log
+logs/
+tmp/
+.cache/
+coverage/
+
+# ---------------------------------------------------------------------------
+# Node / TypeScript (apps/pwa, apps/web, packages/*)
+# ---------------------------------------------------------------------------
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/*
+!.yarn/releases
+dist/
+build/
+out/
+.turbo/
+.vite/
+.astro/
+.vercel/
+.netlify/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Generated code: rebuilt from packages/contracts and packages/design-tokens
+packages/api-client/generated/
+packages/design-tokens/generated/
+
+# ---------------------------------------------------------------------------
+# iOS / Xcode (apps/ios)
+# ---------------------------------------------------------------------------
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+.swiftpm/
+.build/
+Pods/
+Carthage/Build/
+apps/ios/fastlane/report.xml
+apps/ios/fastlane/Preview.html
+apps/ios/fastlane/screenshots/**/*.png
+apps/ios/fastlane/test_output/
+
+# ---------------------------------------------------------------------------
+# Android / Gradle (apps/android)
+# ---------------------------------------------------------------------------
+.gradle/
+.kotlin/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+apps/android/app/release/
+apps/android/fastlane/report.xml
+
+# ---------------------------------------------------------------------------
+# Supabase (backend/supabase)
+# ---------------------------------------------------------------------------
+backend/supabase/.branches/
+backend/supabase/.temp/
+backend/supabase/.env
+backend/supabase/functions/.env
