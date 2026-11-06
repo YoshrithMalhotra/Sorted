@@ -1,0 +1,84 @@
+# XcodeGen spec: the source of truth for Sorted.xcodeproj, which is generated
+# and git-ignored. Run `xcodegen` in apps/ios after changing this file or
+# adding files.
+name: Sorted
+options:
+  bundleIdPrefix: app.sorted
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+configFiles:
+  Debug: Configs/Base.xcconfig
+  Release: Configs/Base.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+packages:
+  SortedKit:
+    path: Packages/SortedKit
+
+targets:
+  Sorted:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sorted
+    dependencies:
+      - package: SortedKit
+    settings:
+      base:
+        # Placeholder until the bundle ID decision is recorded in docs/decisions.
+        PRODUCT_BUNDLE_IDENTIFIER: app.sorted.ios
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: YES
+    info:
+      path: Sorted/Info.plist
+      properties:
+        CFBundleDisplayName: Sorted
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIBackgroundModes: [fetch]
+        BGTaskSchedulerPermittedIdentifiers: [app.sorted.refresh]
+        ITSAppUsesNonExemptEncryption: false
+        SortedFunctionsURL: $(SORTED_FUNCTIONS_URL)
+        SortedSupabaseAnonKey: $(SORTED_SUPABASE_ANON_KEY)
+
+  SortedTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: SortedTests
+    dependencies:
+      - target: Sorted
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.sorted.ios.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Sorted:
+    build:
+      targets:
+        Sorted: all
+        SortedTests: [test]
+    test:
+      targets:
+        - SortedTests
+        - package: SortedKit/SortedKitTests
+    run:
+      config: Debug

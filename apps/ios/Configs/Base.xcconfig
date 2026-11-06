@@ -1,0 +1,13 @@
+// Settings shared by every build. Values here are safe to commit.
+// Put real values in Local.xcconfig (git-ignored), which overrides these.
+
+// Supabase Edge Functions base URL, for example
+// https:/$()/abcdefgh.supabase.co/functions/v1
+// (the $() stops xcconfig reading // as a comment).
+// Left empty, every capture falls back to a plain task.
+SORTED_FUNCTIONS_URL =
+
+// The Supabase anon key. It is public by design; RLS protects the data.
+SORTED_SUPABASE_ANON_KEY =
+
+#include? "Local.xcconfig"

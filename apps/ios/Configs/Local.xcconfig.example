@@ -1,0 +1,4 @@
+// Copy to Local.xcconfig (git-ignored) and fill in.
+SORTED_FUNCTIONS_URL = https:/$()/YOUR-PROJECT.supabase.co/functions/v1
+SORTED_SUPABASE_ANON_KEY = YOUR-ANON-KEY
+DEVELOPMENT_TEAM = YOUR-TEAM-ID
