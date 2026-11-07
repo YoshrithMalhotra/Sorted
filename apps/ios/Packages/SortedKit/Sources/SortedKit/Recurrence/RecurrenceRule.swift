@@ -8,9 +8,9 @@ import Foundation
 /// and `WKST=MO`. Anything else is rejected with `.unsupported`, so a rule the
 /// app can't expand never gets saved.
 ///
-/// The same subset is validated by the `parse` Edge Function with the `rrule`
-/// library. Expansion follows that library's behavior: `DTSTART` is only an
-/// occurrence when it matches the rule.
+/// The same subset is validated by the parse API in
+/// `backend/api/sorted_api/rrule.py`. Expansion follows the common `rrule`
+/// libraries: `DTSTART` is only an occurrence when it matches the rule.
 public struct RecurrenceRule: Hashable, Sendable {
     public enum Frequency: String, Sendable, CaseIterable {
         case hourly = "HOURLY"

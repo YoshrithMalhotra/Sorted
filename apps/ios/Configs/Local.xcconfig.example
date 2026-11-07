@@ -1,4 +1,8 @@
 // Copy to Local.xcconfig (git-ignored) and fill in.
-SORTED_FUNCTIONS_URL = https:/$()/YOUR-PROJECT.supabase.co/functions/v1
+// The Sorted API on your Mac. Use your Mac's Bonjour name (`scutil --get LocalHostName`, plus .local)
+// so an iPhone on the same Wi-Fi reaches it too; localhost works only in the simulator.
+SORTED_FUNCTIONS_URL = http:/$()/localhost:8000
+// Sent as the `apikey` header. Must match SORTED_CLIENT_KEY in backend/api/.env.
 SORTED_SUPABASE_ANON_KEY = YOUR-ANON-KEY
+// Your team ID, from Xcode > Settings > Accounts, for running on a device.
 DEVELOPMENT_TEAM = YOUR-TEAM-ID

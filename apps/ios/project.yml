@@ -55,6 +55,11 @@ targets:
         UIBackgroundModes: [fetch]
         BGTaskSchedulerPermittedIdentifiers: [app.sorted.refresh]
         ITSAppUsesNonExemptEncryption: false
+        # Lets debug builds reach the API on http://localhost or http://<mac>.local. Public hosts still need HTTPS.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        # iOS asks before an app talks to the local network, as a device build does to reach the API on your Mac.
+        NSLocalNetworkUsageDescription: Sorted connects to the development server on your Mac.
         SortedFunctionsURL: $(SORTED_FUNCTIONS_URL)
         SortedSupabaseAnonKey: $(SORTED_SUPABASE_ANON_KEY)
 

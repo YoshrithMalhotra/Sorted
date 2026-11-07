@@ -2,7 +2,7 @@
 
 **Say it once.** Sorted is an AI life assistant. You type or say one sentence, such as "call mom Sunday evening, renew car insurance before March 10, and get milk, eggs and dish soap", and it turns that into reminders, deadlines, bills and shopping lists that are already scheduled.
 
-> **Status:** planning. This repository holds the folder structure and this README. No code has been written yet.
+> **Status:** building. The iOS app (`apps/ios`) and the parse API (`backend/api`) work locally. Everything else is still a placeholder.
 
 - MVP spec: [Life Assistant App — MVP Spec](https://claude.ai/artifact/X5bi4nu17cCguRTK3wdjUr)
 - Mockups, post images and logo: [App Mockups for Launch Post](https://claude.ai/artifact/6YVqNxKFDi5W5vdSTnYDB7)
@@ -32,7 +32,7 @@ Both links are private to the owner until they are shared from the page's Share 
 | Android | `apps/android` | Kotlin, Jetpack Compose, Room cache, Google Play Billing | Exact alarms and WorkManager for reminders |
 | PWA | `apps/pwa` | TypeScript, React, Vite, service worker | The full app in the browser. Installable on desktop and Android. Web Push for reminders. Stripe for payments |
 | Website | `apps/web` | TypeScript, Astro (static) | Marketing site, waitlist, founding-member offer, legal pages. Fast and SEO-friendly |
-| Backend | `backend/` | Supabase: Postgres, Auth, Edge Functions, Storage, pg_cron | One backend serves every client |
+| Backend | `backend/` | Python (FastAPI) for the AI endpoints in `backend/api`; Supabase for Postgres, Auth, Storage, pg_cron | One backend serves every client. See [ADR 0001](docs/decisions/0001-python-api-service.md) |
 
 The mobile apps are native on purpose: reminders and notifications are the product, and native code gives the most reliable scheduling on each OS. The two web apps share TypeScript packages. All clients share one API contract.
 
@@ -53,12 +53,12 @@ The mobile apps are native on purpose: reminders and notifications are the produ
                         insights · notify ·     insights ·
                         billing-webhooks        push fan-out
                               |
-                     Claude API (server side only)
+                     Gemini API (server side only)
 ```
 
-- **AI runs only on the server.** Clients never hold an API key. Edge Functions call Claude with structured outputs, so `parse` always returns valid JSON that matches the shared schemas.
-  - The default model is `claude-opus-5-5` at low effort.
-  - Evaluate `claude-haiku-5-5` for `parse`, to cut cost.
+- **AI runs only on the server.** Clients never hold an API key. The Python API in `backend/api` calls Gemini with a JSON response schema, so `parse` always returns JSON that matches the shared schemas.
+  - The default model is `gemini-3.8-flash` at a low thinking level.
+  - Evaluate `gemini-3.5-flash-lite` for `parse`, to cut cost.
 - **Data is scoped by household.** Every table carries `household_id`, and row-level security enforces it. Family sharing in v1.1 then needs no schema rewrite.
 - **Offline first on mobile.** The apps write to a local cache and sync to Postgres. Reminders still fire with no network.
 - **One subscription across all stores.** App Store, Google Play and Stripe purchases all land in a single `entitlements` table, through `billing-webhooks`.
@@ -79,7 +79,7 @@ sorted/
 │       ├── seed/             Sample data for local development (the March 2026 demo data)
 │       ├── tests/            Database and RLS policy tests
 │       └── functions/        Edge Functions (Deno + TypeScript)
-│           ├── _shared/      Shared helpers: auth, Claude client, schemas, errors
+│           ├── _shared/      Shared helpers: auth, AI client, schemas, errors
 │           ├── parse/        Sentence in, structured items out ("Say it once")
 │           ├── assistant/    Chat that reads the user's bills, tasks and lists
 │           ├── insights/     "Heads up" checks: trials, price rises, running low
@@ -136,4 +136,36 @@ Record each choice in `docs/decisions/` once it's made.
 
 ## Getting started
 
-There's nothing to run yet. Setup steps for each app will go here as code lands.
+### Backend API (`backend/api`)
+
+Needs Python 3.12 or later and a Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey).
+
+```sh
+cd backend/api
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+cp .env.example .env              # then set GEMINI_API_KEY
+.venv/bin/pytest                  # no API key needed
+.venv/bin/uvicorn sorted_api.main:app --env-file .env --reload --host 0.0.0.0
+```
+
+Try it:
+
+```sh
+curl -s localhost:8000/parse -H 'Content-Type: application/json' -d '{
+  "text": "call mom Sunday evening and get milk", "timezone": "Asia/Kolkata",
+  "locale": "en_IN", "now": "2026-11-07T10:00:00", "list_names": ["Groceries"]}'
+```
+
+### iOS app (`apps/ios`)
+
+Needs Xcode and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`).
+
+```sh
+cd apps/ios
+cp Configs/Local.xcconfig.example Configs/Local.xcconfig   # point it at the API
+xcodegen
+open Sorted.xcodeproj
+```
+
+Run `swift test` in `apps/ios/Packages/SortedKit` to test the shared logic without a simulator. With `SORTED_FUNCTIONS_URL` left empty, the app still works, and every capture is saved as a plain task.

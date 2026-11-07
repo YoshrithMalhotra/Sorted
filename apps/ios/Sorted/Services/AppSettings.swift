@@ -13,7 +13,7 @@ enum AppSettings {
 
 /// Values set per build in `Configs/*.xcconfig` and read from Info.plist.
 enum AppConfig {
-    /// `https://<project>.supabase.co/functions/v1`, or nil when not set.
+    /// The Sorted API base URL, such as `http://localhost:8000`, or nil when not set.
     static var functionsURL: URL? {
         string("SortedFunctionsURL").flatMap(URL.init(string:))
     }

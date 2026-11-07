@@ -9,7 +9,7 @@ public enum CaptureError: Error, Equatable, Sendable {
     case http(status: Int)
 }
 
-/// Calls the `parse` Edge Function: `POST {functionsURL}/parse`.
+/// Calls the Sorted API's parse endpoint: `POST {functionsURL}/parse`.
 public struct EdgeFunctionParser: CaptureParsing {
     public var functionsURL: URL
     /// The Supabase anon key, sent as `apikey`.

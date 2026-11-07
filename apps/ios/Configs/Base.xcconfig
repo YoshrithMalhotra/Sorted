@@ -1,13 +1,13 @@
 // Settings shared by every build. Values here are safe to commit.
 // Put real values in Local.xcconfig (git-ignored), which overrides these.
 
-// Supabase Edge Functions base URL, for example
-// https:/$()/abcdefgh.supabase.co/functions/v1
+// Base URL of the Sorted API (backend/api), for example
+// http:/$()/localhost:8000 for the server on your Mac
 // (the $() stops xcconfig reading // as a comment).
 // Left empty, every capture falls back to a plain task.
 SORTED_FUNCTIONS_URL =
 
 // The Supabase anon key. It is public by design; RLS protects the data.
-SORTED_SUPABASE_ANON_KEY =
+SORTED_SUPABASE_ANON_KEY = sb_publishable_DH8bme-nqEqVffG1ehVtCw_vSUFBY_R
 
 #include? "Local.xcconfig"
