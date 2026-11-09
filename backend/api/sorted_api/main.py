@@ -60,6 +60,3 @@ async def parse(request: ParseRequest, parser: Annotated[Parser, Depends(get_par
         raise HTTPException(status_code=502, detail="parse failed") from error
     return ParseResponse(items=validate.clean(items, now=request.now))
 
-
-
-
